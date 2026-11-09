@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Moth Games — инди-студия</title>
+<meta name="description" content="Moth Games — независимая студия, делаем уютные и странные игры.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Manrope:wght@400;500;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#fff6d6;--y1:#ffd23f;--y2:#ffb81c;--o1:#ff8a00;--o2:#ff6b00;--o3:#d94f00;--ink:#2b1200;--mut:#7a5a2c;--line:#f0d588;--card:#fffaea}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font:400 17px/1.65 Manrope,system-ui,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+nav{position:fixed;top:0;left:0;right:0;z-index:30;backdrop-filter:blur(14px);background:rgba(255,246,214,.78);border-bottom:2px solid var(--ink)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font:700 20px Unbounded;display:flex;align-items:center;gap:10px}
+.logo i{font:700 14px 'JetBrains Mono';color:var(--o3);font-style:normal}
+nav ul{display:flex;gap:30px;list-style:none;font-size:15px;font-weight:500}
+nav ul a{position:relative}
+nav ul a::after{content:"";position:absolute;left:0;bottom:-3px;height:2px;width:100%;background:var(--o2);transform:scaleX(0);transform-origin:left;transition:.3s}
+nav ul a:hover::after{transform:scaleX(1)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 26px;border-radius:99px;background:var(--ink);color:var(--y1);font-weight:700;font-size:15px;border:2px solid var(--ink);transition:.25s;cursor:pointer;box-shadow:4px 4px 0 var(--o2)}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--o2)}
+.btn.o{background:transparent;color:var(--ink);box-shadow:4px 4px 0 var(--y2)}
+.btn.o:hover{background:var(--y1);box-shadow:7px 7px 0 var(--o2)}
+@media(max-width:800px){nav ul{display:none}}
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding-top:68px;background:linear-gradient(160deg,var(--y1) 0%,var(--y2) 45%,var(--o1) 100%)}
+#bg{position:absolute;inset:0;font:12px/12px 'JetBrains Mono',monospace;white-space:pre;color:#a63d00;overflow:hidden;user-select:none;opacity:.6;mask-image:radial-gradient(ellipse 100% 90% at 70% 50%,#000 30%,rgba(0,0,0,.3) 100%);-webkit-mask-image:radial-gradient(ellipse 100% 90% at 70% 50%,#000 30%,rgba(0,0,0,.3) 100%)}
+.hero .wrap{position:relative;z-index:2}
+.pill{display:inline-block;font:700 13px 'JetBrains Mono';color:var(--ink);border:2px solid var(--ink);padding:6px 14px;border-radius:99px;margin-bottom:26px;background:var(--cream)}
+h1{font:700 clamp(40px,7vw,96px)/1.02 Unbounded;letter-spacing:-.03em;max-width:900px}
+h1 em{font-style:normal;background:var(--ink);color:var(--y1);padding:0 .15em;border-radius:.14em;display:inline-block;transform:rotate(-1.5deg)}
+.lead{max-width:540px;margin:28px 0 36px;font-size:19px;font-weight:500}
+.hero .row{display:flex;gap:16px;flex-wrap:wrap}
+.facts{display:flex;gap:46px;margin-top:70px;flex-wrap:wrap}
+.facts b{display:block;font:700 34px Unbounded}
+.facts span{font:700 13px 'JetBrains Mono';color:#5b2d00}
+.orn{overflow:hidden;white-space:nowrap;border-block:2px solid var(--ink);padding:14px 0;color:var(--cream);font:700 16px 'JetBrains Mono';background:var(--ink)}
+.orn div{display:inline-block;animation:mq 40s linear infinite}
+@keyframes mq{to{transform:translateX(-50%)}}
+section{padding:120px 0}
+.eb{font:700 13px 'JetBrains Mono';color:var(--o3);margin-bottom:14px;display:block}
+h2{font:700 clamp(30px,4.5vw,56px)/1.1 Unbounded;letter-spacing:-.02em;margin-bottom:18px}
+.sub{color:var(--mut);max-width:560px;margin-bottom:56px;font-weight:500}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px}
+.game{background:var(--card);border:2px solid var(--ink);border-radius:20px;overflow:hidden;transition:.3s;box-shadow:6px 6px 0 var(--o2)}
+.game:hover{transform:translate(-4px,-4px);box-shadow:10px 10px 0 var(--o2)}
+.game pre{font:10px/10px 'JetBrains Mono',monospace;height:220px;overflow:hidden;padding:12px;background:var(--ink);border-bottom:2px solid var(--ink);color:var(--y1);user-select:none}
+.game:nth-child(2) pre{color:var(--o1)}.game:nth-child(3) pre{color:#ff9d4a}
+.game .in{padding:24px}
+.game h3{font:700 22px Unbounded;margin-bottom:6px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
+.tags span{font:700 12px 'JetBrains Mono';padding:4px 10px;border-radius:99px;background:var(--y1);color:var(--ink)}
+.game p{color:var(--mut);font-size:15px;margin-bottom:18px}
+.game .f{display:flex;justify-content:space-between;align-items:center;font:700 13px 'JetBrains Mono';color:var(--mut)}
+.game .f a{color:var(--o3)}
+.alt{background:var(--y1);border-block:2px solid var(--ink)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+#torch{font:11px/11px 'JetBrains Mono',monospace;white-space:pre;background:var(--ink);border:2px solid var(--ink);border-radius:20px;padding:20px;color:var(--y1);height:440px;overflow:hidden;box-shadow:8px 8px 0 var(--o2)}
+.feat{list-style:none;margin:28px 0}
+.feat li{display:flex;gap:16px;padding:16px 0;border-bottom:2px dashed rgba(43,18,0,.3)}
+.feat b{font:700 15px 'JetBrains Mono';color:var(--o3);min-width:28px}
+.feat strong{display:block;font-weight:700}
+.feat span{color:#5b3b0f;font-size:15px}
+/* drawn progress bars */
+.bars{margin-top:8px}
+.bar{margin:16px 0}
+.bar .t{display:flex;justify-content:space-between;font:700 14px 'JetBrains Mono';margin-bottom:8px}
+.bar .t b{color:var(--o3)}
+.track{position:relative;height:26px;border-radius:99px;border:2px solid var(--ink);background:var(--cream);overflow:hidden;box-shadow:inset 0 3px 0 rgba(43,18,0,.12)}
+.fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:99px;transition:width 1.8s cubic-bezier(.2,.8,.2,1);
+ background:repeating-linear-gradient(-45deg,var(--o2) 0 12px,var(--o1) 12px 24px);background-size:34px 34px;animation:stripes 1.2s linear infinite;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15),inset 0 4px 0 rgba(255,255,255,.3)}
+.fill::after{content:"";position:absolute;right:3px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:var(--cream);border:2px solid var(--ink);box-shadow:0 0 0 4px rgba(255,255,255,.35)}
+@keyframes stripes{to{background-position:34px 0}}
+.fill.y{background:repeating-linear-gradient(-45deg,var(--y2) 0 12px,var(--y1) 12px 24px)}
+.ticks{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 2px),rgba(43,18,0,.25) calc(10% - 2px) 10%)}
+.stats{background:var(--ink);color:var(--cream);padding:70px 0}
+.stats .g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px;text-align:center}
+.stats b{display:block;font:700 clamp(36px,5vw,60px)/1 Unbounded;color:var(--y1)}
+.stats span{color:#f0d588;font-size:14px}
+.ring{width:110px;height:110px;margin:0 auto 12px}
+.ring circle{fill:none;stroke-width:10}
+.ring .bg{stroke:rgba(255,210,63,.2)}
+.ring .fg{stroke:var(--y1);stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:283;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset 2s cubic-bezier(.2,.8,.2,1)}
+.ring text{fill:var(--y1);font:700 22px 'JetBrains Mono';text-anchor:middle}
+.team{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+.mem{background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:28px;text-align:center;transition:.3s;box-shadow:5px 5px 0 var(--y2)}
+.mem:hover{transform:rotate(-1.5deg) translateY(-4px);box-shadow:8px 8px 0 var(--o2)}
+.face{font:700 34px 'JetBrains Mono';color:var(--o3);margin-bottom:18px;height:50px}
+.mem h4{font:700 18px Unbounded}.mem p{color:var(--mut);font-size:14px}
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.q{border:2px solid var(--ink);border-radius:18px;padding:30px;background:var(--y1);box-shadow:6px 6px 0 var(--ink)}
+.q:nth-child(2){background:var(--y2)}.q:nth-child(3){background:var(--o1)}
+.q p{font-size:19px;margin:12px 0 20px;font-weight:500}.q small{font:700 13px 'JetBrains Mono'}
+.q:before{content:'"';font:700 54px/1 'JetBrains Mono';color:var(--ink)}
+.log a{display:grid;grid-template-columns:110px 1fr auto;gap:24px;padding:26px 0;border-bottom:2px solid var(--ink);align-items:center;transition:.3s}
+.log a:first-child{border-top:2px solid var(--ink)}
+.log a:hover{padding-left:16px;color:var(--o3);background:var(--y1)}
+.log time,.log span{font:700 13px 'JetBrains Mono';color:var(--mut)}
+.log h4{font:500 20px Manrope}
+@media(max-width:700px){.log a{grid-template-columns:1fr}.log span{display:none}}
+.news{text-align:center;background:var(--ink);color:var(--cream);border-radius:32px;padding:80px 30px;position:relative;overflow:hidden}
+.news pre{position:absolute;inset:0;font:11px/11px 'JetBrains Mono';color:rgba(255,138,0,.25);white-space:pre;overflow:hidden;pointer-events:none}
+.news>*:not(pre){position:relative}
+.news h2{margin-bottom:14px;color:var(--y1)}.news p{max-width:500px;margin:0 auto 30px}
+.news form{display:flex;gap:10px;max-width:520px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.news input{flex:1;min-width:220px;padding:15px 22px;border-radius:99px;border:2px solid var(--y1);font:500 16px Manrope;background:var(--cream);outline:0}
+.news .btn{background:var(--y1);color:var(--ink);border-color:var(--y1);box-shadow:4px 4px 0 var(--o2)}
+footer{background:var(--ink);color:var(--cream);padding:70px 0 40px;margin-top:40px}
+.fg{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:40px}
+@media(max-width:800px){.fg{grid-template-columns:1fr 1fr}}
+footer h5{font:700 13px 'JetBrains Mono';color:var(--y2);margin-bottom:16px;letter-spacing:.1em}
+footer li{list-style:none;margin:8px 0}footer li a{color:#f0d588}footer li a:hover{color:var(--o1)}
+.moth{font:12px/13px 'JetBrains Mono';color:var(--o1);white-space:pre;margin-bottom:16px}
+.copy{margin-top:50px;display:flex;justify-content:space-between;color:#c9a55a;font:400 13px 'JetBrains Mono';flex-wrap:wrap;gap:10px}
+.rv{opacity:0;transform:translateY(34px);transition:.8s cubic-bezier(.2,.8,.2,1)}.rv.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><a class="logo" href="#"><i>/\o/\</i>Moth Games</a>
+<ul><li><a href="#games">Игры</a></li><li><a href="#lantern">Lantern Deep</a></li><li><a href="#team">Команда</a></li><li><a href="#log">Девлог</a></li></ul>
+<a class="btn" href="#news">Вишлист в Steam</a></div></nav>
+
+<header class="hero">
+  <pre id="bg"></pre>
+  <div class="wrap">
+    <span class="pill">// инди-студия · Тбилиси / Берлин</span>
+    <h1>Игры, которые <em>светятся</em> в темноте</h1>
+    <p class="lead">Мы — пятеро друзей, которые делают уютные и немного странные игры. Без донатов, без таймеров, без спешки. Только то, во что сами играем по ночам.</p>
+    <div class="row"><a class="btn" href="#games">Смотреть игры →</a><a class="btn o" href="#log">Читать девлог</a></div>
+    <div class="facts"><div><b data-n="3">0</b><span>выпущенные игры</span></div><div><b data-n="1200000">0</b><span>игроков по миру</span></div><div><b data-n="96">0</b><span>% положительных отзывов</span></div></div>
+  </div>
+</header>
+
+<div class="orn"><div id="orn"></div></div>
+
+<section id="games"><div class="wrap">
+  <span class="eb rv">[01] игры</span><h2 class="rv">Что мы уже сделали</h2><p class="sub rv">Три игры, три настроения. Каждая живёт в своём ASCII-мире — наведите курсор, и он ускорится.</p>
+  <div class="games">
+    <article class="game rv"><pre data-f="stars"></pre><div class="in"><h3>Night Orchard</h3><div class="tags"><span>Расслабляющая</span><span>Садоводство</span><span>PC · Switch</span></div><p>Выращивайте деревья, которые цветут только ночью, и пускайте светлячков в свой сад.</p><div class="f"><span>★ 4.9 · 38 000 отзывов</span><a href="#">Страница →</a></div></div></article>
+    <article class="game rv"><pre data-f="rain"></pre><div class="in"><h3>Quiet Rain</h3><div class="tags"><span>Нарратив</span><span>Детектив</span><span>PC · Mac</span></div><p>Дождливый город, потерянное письмо и три жильца дома, у каждого из которых есть тайна.</p><div class="f"><span>★ 4.8 · 21 000 отзывов</span><a href="#">Страница →</a></div></div></article>
+    <article class="game rv"><pre data-f="wave"></pre><div class="in"><h3>Tidebound</h3><div class="tags"><span>Приключение</span><span>Парусники</span><span>PC · iOS</span></div><p>Плывите между островами-призраками и собирайте музыку приливов в коллекцию.</p><div class="f"><span>★ 4.7 · 12 000 отзывов</span><a href="#">Страница →</a></div></div></article>
+  </div>
+</div></section>
+
+<section id="lantern" class="alt"><div class="wrap split">
+  <div>
+    <span class="eb rv">[02] скоро</span><h2 class="rv">Lantern Deep</h2>
+    <p class="rv" style="font-weight:500">Кооперативный данжен-краулер, где свет — это ваш единственный ресурс. Чем глубже вы спускаетесь, тем ярче должен гореть фонарь, и тем больше он привлекает того, кто живёт в темноте.</p>
+    <ul class="feat rv">
+      <li><b>01</b><div><strong>Кооператив на 1–4 игрока</strong><span>Делите масло между фонарями и решайте, кто идёт впереди.</span></div></li>
+      <li><b>02</b><div><strong>Процедурные пещеры</strong><span>Каждый спуск уникален. Тьма реагирует на ваши шаги.</span></div></li>
+      <li><b>03</b><div><strong>Саундтрек из ASMR-записей</strong><span>Звук капли — часть геймплея. Играйте в наушниках.</span></div></li>
+    </ul>
+    <div class="bars rv">
+      <div class="bar"><div class="t"><span>Прототип</span><b data-p="100">0%</b></div><div class="track"><div class="fill" data-w="100"></div><div class="ticks"></div></div></div>
+      <div class="bar"><div class="t"><span>Основной геймплей</span><b data-p="80">0%</b></div><div class="track"><div class="fill" data-w="80"></div><div class="ticks"></div></div></div>
+      <div class="bar"><div class="t"><span>Контент и уровни</span><b data-p="52">0%</b></div><div class="track"><div class="fill y" data-w="52"></div><div class="ticks"></div></div></div>
+      <div class="bar"><div class="t"><span>Полировка</span><b data-p="18">0%</b></div><div class="track"><div class="fill y" data-w="18"></div><div class="ticks"></div></div></div>
+    </div>
+    <div class="row rv" style="margin-top:30px"><a class="btn" href="#news">В вишлист</a></div>
+  </div>
+  <pre id="torch" class="rv"></pre>
+</div></section>
+
+<div class="stats"><div class="wrap g">
+  <div><svg class="ring" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" cx="50" cy="50" r="45" data-r="0.96"/><text x="50" y="58">96%</text></svg><span>игроков рекомендуют</span></div>
+  <div><svg class="ring" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" cx="50" cy="50" r="45" data-r="0.7"/><text x="50" y="58">5</text></svg><span>человек в команде</span></div>
+  <div><svg class="ring" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" cx="50" cy="50" r="45" data-r="0.85"/><text x="50" y="58">14</text></svg><span>наград и номинаций</span></div>
+  <div><svg class="ring" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" cx="50" cy="50" r="45" data-r="0.55"/><text x="50" y="58">7</text></svg><span>лет вместе</span></div>
+</div></div>
+
+<section id="team"><div class="wrap">
+  <span class="eb rv">[03] люди</span><h2 class="rv">Кто за этим стоит</h2><p class="sub rv">Маленькая команда без начальников. Наведите на карточку — персонаж сменит настроение.</p>
+  <div class="team">
+    <div class="mem rv"><div class="face" data-f='["(•‿•)","(^o^)","(ツ)"]'>(•‿•)</div><h4>Нино К.</h4><p>Креативный директор</p></div>
+    <div class="mem rv"><div class="face" data-f='["[¬º-°]¬","[•_•]","[^_^]"]'>[•_•]</div><h4>Лука Р.</h4><p>Программист геймплея</p></div>
+    <div class="mem rv"><div class="face" data-f='["(◕ᴥ◕)","(•ᴥ•)","(ᵔᴥᵔ)"]'>(◕ᴥ◕)</div><h4>Мария Т.</h4><p>Художница</p></div>
+    <div class="mem rv"><div class="face" data-f='["♪(´▽`)","♫(•◡•)","(ᵔ◡ᵔ)♪"]'>♪(´▽`)</div><h4>Даниэль В.</h4><p>Композитор и звук</p></div>
+  </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <span class="eb rv">[04] пресса</span><h2 class="rv">Что о нас пишут</h2><br>
+  <div class="quotes">
+    <div class="q rv"><p>Самая тёплая игра года. После неё хочется позвонить родным.</p><small>— PC Gamer Weekly</small></div>
+    <div class="q rv"><p>Moth Games доказали: маленькая команда может сделать большое чудо.</p><small>— IndieDaily</small></div>
+    <div class="q rv"><p>Саундтрек Quiet Rain я слушаю уже полгода, не выходя из игры.</p><small>— Игромания</small></div>
+  </div>
+</div></section>
+
+<section id="log" style="padding-top:0"><div class="wrap">
+  <span class="eb rv">[05] девлог</span><h2 class="rv">Свежие записи</h2><br>
+  <div class="log rv">
+    <a href="#"><time>12.10.2026</time><h4>Как мы рисуем темноту: шейдеры для Lantern Deep</h4><span>8 мин ↗</span></a>
+    <a href="#"><time>28.09.2026</time><h4>Итоги закрытого теста: 4 000 игроков и 312 бага</h4><span>5 мин ↗</span></a>
+    <a href="#"><time>03.09.2026</time><h4>Почему в наших играх нет таймеров</h4><span>6 мин ↗</span></a>
+    <a href="#"><time>15.08.2026</time><h4>Звук капли: как писали ASMR-саундтрек в пещере</h4><span>9 мин ↗</span></a>
+  </div>
+</div></section>
+
+<section id="news" style="padding-top:0"><div class="wrap">
+  <div class="news rv"><pre id="newsbg"></pre><h2>Не пропустите релиз</h2><p>Раз в месяц присылаем девлог, скидки и ранний доступ к бетам. Без спама, обещаем.</p>
+  <form onsubmit="event.preventDefault();this.innerHTML='<b>Спасибо! Вы в списке.</b>'"><input type="email" required placeholder="you@email.com"><button class="btn">Подписаться</button></form></div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="fg">
+    <div><pre class="moth"> \  /\  /
+  ( \/ \/ )
+   \ (••) /
+    '-..-'</pre><b class="logo" style="font-size:18px">Moth Games</b><p style="color:#c9a55a;font-size:14px;margin-top:10px;max-width:260px">Независимая студия. Делаем игры для тех, кто не спит.</p></div>
+    <div><h5>ИГРЫ</h5><ul><li><a href="#">Night Orchard</a></li><li><a href="#">Quiet Rain</a></li><li><a href="#">Tidebound</a></li><li><a href="#">Lantern Deep</a></li></ul></div>
+    <div><h5>СТУДИЯ</h5><ul><li><a href="#">О нас</a></li><li><a href="#">Вакансии</a></li><li><a href="#">Пресс-кит</a></li><li><a href="#">Контакты</a></li></ul></div>
+    <div><h5>СЕТИ</h5><ul><li><a href="#">Discord</a></li><li><a href="#">Telegram</a></li><li><a href="#">YouTube</a></li><li><a href="#">Steam</a></li></ul></div>
+  </div>
+  <div class="copy"><span>© 2026 Moth Games</span><span>hello@moth.games</span><span>сделано ночью</span></div>
+</div></footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const hash=(x,y)=>{let h=Math.imul(x|0,374761393)+Math.imul(y|0,668265263)|0;h=Math.imul(h^(h>>>13),1274126177);return((h^(h>>>16))>>>0)/4294967295};
+const RAMP=' .·:-=+*#%@';
+const mouse={x:-1,y:-1};
+function field(el,fn,opt={}){const cw=opt.cw||7.2,ch=opt.ch||12;let cols=0,rows=0,vis=true,hov=false,t=0,last=0;
+ const size=()=>{const r=el.getBoundingClientRect();cols=Math.max(10,r.width/cw|0);rows=Math.max(5,r.height/ch|0)};size();addEventListener('resize',size);
+ new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(el);
+ el.parentElement.addEventListener('mouseenter',()=>hov=true);el.parentElement.addEventListener('mouseleave',()=>hov=false);
+ (function f(now){requestAnimationFrame(f);if(!vis||now-last<42)return;t+=(now-last)/1000*(hov?2.4:1);last=now;
+  let s='';for(let y=0;y<rows;y++){for(let x=0;x<cols;x++)s+=fn(x,y,t,cols,rows);s+='\n'}el.textContent=s})(0)}
+const ramp=v=>RAMP[Math.max(0,Math.min(RAMP.length-1,v*RAMP.length|0))];
+const F={
+ stars:(x,y,t)=>{const h=hash(x,y);if(h<.9)return' ';const b=(Math.sin(t*3+h*60)+1)/2;return['.','+','*','✦'][b*3.99|0]},
+ rain:(x,y,t,c,r)=>{const h=hash(x,1);if(h<.45)return' ';const d=((y/r)+t*(.4+h*.7)+h*7)%1;return d>.82?(d>.96?'|':'¦'):(hash(x,y)>.985?'.':' ')},
+ wave:(x,y,t,c,r)=>{const w=Math.sin(x*.18+t*1.6)*2.2+Math.sin(x*.07-t)*2.5+r*.55;if(y<w-1)return' ';if(y<w)return'~';return y<w+2?'≈':hash(x,y)>.9?'.':' '},
+ hero:(x,y,t,c,r)=>{const v=(Math.sin(x*.09+t*.8)+Math.sin(y*.25-t*.6)+Math.sin((x+y)*.07+t*.5)+Math.sin(Math.hypot(x-c*.7,y-r*.5)*.2-t))/4*.5+.5;
+  let m=0;if(mouse.x>=0){const d=Math.hypot(x-mouse.x,(y-mouse.y)*1.7);m=Math.max(0,1-d/14)}return ramp(Math.min(1,v*.75+m*.6))},
+ torch:(x,y,t,c,r)=>{const cx=c/2,dx=(x-cx)/c*2.2,dy=(y-r*.62)/r*2;const fl=Math.sin(t*9+x*.3)*.04+Math.sin(t*5.3)*.05;
+  const d=Math.hypot(dx*1.2,dy)+fl;const flame=Math.max(0,1-d*1.5);if(flame>0)return ramp(flame+hash(x,y+(t*12|0))*.15);
+  if(y>r*.7&&Math.abs(x-cx)<2)return'║';return hash(x,y)>.96&&d<1.3?'·':' '}
+};
+field($('#bg'),F.hero,{cw:7.2,ch:12});
+addEventListener('mousemove',e=>{const r=$('#bg').getBoundingClientRect();mouse.x=(e.clientX-r.left)/7.2;mouse.y=(e.clientY-r.top)/12});
+$$('pre[data-f]').forEach(p=>field(p,F[p.dataset.f],{cw:6,ch:10}));
+field($('#torch'),F.torch,{cw:6.6,ch:11});
+field($('#newsbg'),(x,y,t)=>ramp((Math.sin(x*.2+t)+Math.sin(y*.3-t))/4+.5),{cw:6.6,ch:11});
+$('#orn').textContent=('·:*+=#@#=+*:· MOTH GAMES ·:*+=#@#=+*:· NIGHT ORCHARD · QUIET RAIN · TIDEBOUND · LANTERN DEEP ').repeat(6);
+$$('.face').forEach(f=>{const a=JSON.parse(f.dataset.f);let i=0;f.parentElement.addEventListener('mouseenter',()=>{i=(i+1)%a.length;f.textContent=a[i]})});
+/* reveal: bars, rings, counters */
+function count(b,n,fmt){const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1800);b.textContent=fmt(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0)}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.classList.add('on');
+ el.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%');
+ el.querySelectorAll('[data-p]').forEach(b=>count(b,+b.dataset.p,v=>Math.round(v)+'%'));io.unobserve(el)}),{threshold:.12});
+$$('.rv').forEach((e,i)=>{e.style.transitionDelay=(i%3)*.08+'s';io.observe(e)});
+const co=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const b=e.target;
+ if(b.dataset.n)count(b,+b.dataset.n,v=>Math.round(v).toLocaleString('ru'));
+ if(b.dataset.r)b.style.strokeDashoffset=283*(1-+b.dataset.r);co.unobserve(b)}),{threshold:.4});
+$$('[data-n],[data-r]').forEach(b=>co.observe(b));
+</script>
+</body>
+</html>

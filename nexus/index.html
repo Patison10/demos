@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS — облако GPU для нейросетей</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@500;700;800&family=Chakra+Petch:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05030f;--c:#00f0ff;--m:#ff2bd6;--v:#7b5cff;--t:#e8ecff;--mut:#8a8fb5}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font:17px/1.55 'Chakra Petch',system-ui,sans-serif;overflow-x:hidden}
+#net{position:fixed;inset:0;z-index:0}
+.glow1,.glow2{position:fixed;width:60vw;height:60vw;border-radius:50%;filter:blur(120px);opacity:.28;z-index:0;pointer-events:none;animation:drift 18s ease-in-out infinite alternate}
+.glow1{background:var(--v);top:-20vw;left:-15vw}.glow2{background:var(--m);bottom:-25vw;right:-15vw;animation-delay:-9s}
+@keyframes drift{to{transform:translate(8vw,6vw) scale(1.15)}}
+nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 5vw;background:rgba(5,3,15,.55);backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,240,255,.15)}
+.brand{font:900 22px Orbitron,'Exo 2',sans-serif;letter-spacing:.15em;background:linear-gradient(90deg,var(--c),var(--m));-webkit-background-clip:text;color:transparent}
+nav ul{display:flex;gap:28px;list-style:none}
+nav a{color:var(--mut);text-decoration:none;font-size:14px;letter-spacing:.12em;text-transform:uppercase;transition:.2s}
+nav a:hover{color:var(--c);text-shadow:0 0 12px var(--c)}
+@media(max-width:700px){nav ul{display:none}}
+.btn{position:relative;display:inline-block;padding:14px 30px;font:700 14px Orbitron,'Exo 2',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#000;background:linear-gradient(90deg,var(--c),var(--v));text-decoration:none;
+ clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);transition:.25s;border:0;cursor:pointer;overflow:hidden}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.7) 50%,transparent 60%);transform:translateX(-120%);transition:.7s}
+.btn:hover::after{transform:translateX(120%)}
+.btn:hover{filter:drop-shadow(0 0 18px var(--c));transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--c);box-shadow:inset 0 0 0 1px var(--c)}
+section,header.hero{position:relative;z-index:2;padding:110px 5vw}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding-top:140px;overflow:hidden}
+.floor{position:absolute;left:-50%;right:-50%;bottom:0;height:55%;perspective:420px;pointer-events:none;mask-image:linear-gradient(transparent,#000 60%);-webkit-mask-image:linear-gradient(transparent,#000 60%)}
+.floor div{position:absolute;inset:0;transform:rotateX(68deg);transform-origin:bottom;
+ background-image:linear-gradient(var(--m) 1px,transparent 1px),linear-gradient(90deg,var(--c) 1px,transparent 1px);background-size:70px 70px;animation:grid 1.6s linear infinite;opacity:.55}
+@keyframes grid{to{background-position:0 70px}}
+.badge{display:inline-flex;gap:10px;align-items:center;padding:7px 16px;border:1px solid rgba(0,240,255,.4);border-radius:99px;font-size:13px;letter-spacing:.14em;color:var(--c);background:rgba(0,240,255,.06);margin-bottom:28px}
+.badge i{width:8px;height:8px;border-radius:50%;background:#2dff8a;box-shadow:0 0 10px #2dff8a;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.3;transform:scale(.6)}}
+h1{font:900 clamp(44px,10vw,132px)/.95 Orbitron,'Exo 2',sans-serif;letter-spacing:.02em;text-transform:uppercase;position:relative}
+.gl{position:relative;display:inline-block;background:linear-gradient(90deg,var(--c),var(--m),var(--c));background-size:200%;-webkit-background-clip:text;color:transparent;animation:flow 5s linear infinite}
+@keyframes flow{to{background-position:200%}}
+h1 .g{position:relative;display:inline-block}
+h1 .g::before,h1 .g::after{content:attr(data-t);position:absolute;left:0;top:0;width:100%;overflow:hidden;color:var(--t);-webkit-text-fill-color:currentColor}
+h1 .g::before{color:var(--c);animation:g1 3.2s infinite steps(1);mix-blend-mode:screen}
+h1 .g::after{color:var(--m);animation:g2 3.2s infinite steps(1);mix-blend-mode:screen}
+@keyframes g1{0%,90%,100%{clip-path:inset(0 0 100% 0);transform:none}91%{clip-path:inset(10% 0 60% 0);transform:translate(-6px)}94%{clip-path:inset(60% 0 10% 0);transform:translate(5px)}97%{clip-path:inset(30% 0 40% 0);transform:translate(-3px)}}
+@keyframes g2{0%,90%,100%{clip-path:inset(0 0 100% 0);transform:none}92%{clip-path:inset(50% 0 20% 0);transform:translate(6px)}95%{clip-path:inset(5% 0 75% 0);transform:translate(-5px)}98%{clip-path:inset(70% 0 5% 0);transform:translate(3px)}}
+.sub{max-width:640px;margin:28px auto 38px;color:var(--mut);font-size:19px}
+.cta{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;position:relative;z-index:3}
+.hud{position:relative;z-index:3;margin-top:60px;display:flex;gap:clamp(18px,4vw,60px);flex-wrap:wrap;justify-content:center}
+.hud div{font:700 clamp(26px,4vw,44px) Orbitron,'Exo 2',sans-serif;color:var(--c);text-shadow:0 0 18px rgba(0,240,255,.6)}
+.hud small{display:block;font:400 12px 'Chakra Petch';color:var(--mut);letter-spacing:.2em;text-transform:uppercase}
+.tick{position:relative;z-index:2;border-block:1px solid rgba(255,43,214,.3);background:rgba(255,43,214,.05);overflow:hidden;white-space:nowrap;padding:10px 0;font:500 13px Orbitron,'Exo 2',sans-serif;letter-spacing:.2em;color:var(--m)}
+.tick div{display:inline-block;animation:mq 40s linear infinite}
+@keyframes mq{to{transform:translateX(-50%)}}
+h2{font:900 clamp(30px,5vw,56px) Orbitron,'Exo 2',sans-serif;text-transform:uppercase;text-align:center;margin-bottom:12px}
+.lbl{display:block;text-align:center;color:var(--c);letter-spacing:.3em;font-size:13px;margin-bottom:14px}
+.p{text-align:center;color:var(--mut);max-width:600px;margin:0 auto 56px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;max-width:1200px;margin:0 auto}
+.card{--mx:50%;--my:50%;position:relative;padding:32px 28px;border-radius:16px;background:rgba(14,10,38,.7);backdrop-filter:blur(10px);transition:transform .25s;transform-style:preserve-3d;
+ border:1px solid rgba(123,92,255,.3);overflow:hidden}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx) var(--my),rgba(0,240,255,.22),transparent 60%);opacity:0;transition:.3s}
+.card:hover::before{opacity:1}
+.card:hover{border-color:var(--c);box-shadow:0 0 40px rgba(0,240,255,.2)}
+.ico{font:900 30px Orbitron,'Exo 2',sans-serif;color:var(--m);text-shadow:0 0 16px var(--m);margin-bottom:16px}
+.card h3{font:700 19px Orbitron,'Exo 2',sans-serif;margin-bottom:8px;letter-spacing:.05em}
+.card p{color:var(--mut);font-size:15px}
+.bar{height:6px;border-radius:9px;background:rgba(255,255,255,.08);margin-top:18px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--c),var(--m));box-shadow:0 0 12px var(--c);transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+.price{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
+.plan{padding:34px 28px;border-radius:16px;background:rgba(14,10,38,.7);border:1px solid rgba(123,92,255,.3);position:relative;transition:.3s}
+.plan:hover{transform:translateY(-8px)}
+.plan.hot{border:1px solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(135deg,var(--c),var(--m),var(--v)) border-box;box-shadow:0 0 50px rgba(255,43,214,.25)}
+.plan .tag{position:absolute;top:-12px;right:22px;background:var(--m);color:#000;font:700 11px Orbitron,'Exo 2',sans-serif;padding:4px 12px;letter-spacing:.15em}
+.plan b{display:block;font:900 44px Orbitron,'Exo 2',sans-serif;margin:10px 0 4px;color:var(--c)}
+.plan ul{list-style:none;margin:20px 0 26px;color:var(--mut)}
+.plan li{padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.08)}
+.plan li::before{content:"▸ ";color:var(--m)}
+.cta2{text-align:center;position:relative;z-index:2;padding:120px 5vw 140px}
+.cta2 h2{margin-bottom:28px}
+footer{position:relative;z-index:2;text-align:center;padding:30px;color:var(--mut);font-size:13px;letter-spacing:.15em;border-top:1px solid rgba(0,240,255,.12)}
+.rv{opacity:0;transform:translateY(40px) scale(.97);transition:.8s cubic-bezier(.2,.8,.2,1)}
+.rv.on{opacity:1;transform:none}
+.logos{position:relative;z-index:2;text-align:center;padding:50px 5vw}
+.logos small{color:var(--mut);letter-spacing:.3em;font-size:12px}
+.logos div{display:flex;gap:clamp(24px,5vw,70px);justify-content:center;flex-wrap:wrap;margin-top:22px;font:700 20px Orbitron,'Exo 2',sans-serif;color:#4a4f7a}
+.logos span{transition:.3s}.logos span:hover{color:var(--c);text-shadow:0 0 14px var(--c)}
+.steps{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+@media(max-width:850px){.steps{grid-template-columns:1fr}}
+.st{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid rgba(123,92,255,.25)}
+.st b{font:900 34px Orbitron,'Exo 2',sans-serif;color:var(--m);text-shadow:0 0 14px var(--m)}
+.st h3{font:700 18px Orbitron,'Exo 2',sans-serif;margin-bottom:4px}.st p{color:var(--mut);font-size:15px}
+.code{background:#07041a;border:1px solid rgba(0,240,255,.35);border-radius:14px;overflow:hidden;box-shadow:0 0 50px rgba(0,240,255,.15)}
+.code .h{display:flex;gap:7px;padding:12px 16px;background:rgba(0,240,255,.07)}
+.code .h i{width:11px;height:11px;border-radius:50%;background:var(--m)}.code .h i:nth-child(2){background:#ffd02b}.code .h i:nth-child(3){background:#2dff8a}
+.code pre{padding:20px;font:14px/1.7 ui-monospace,Consolas,monospace;color:#b9c3ff;overflow:auto;min-height:250px}
+.code .k{color:var(--m)}.code .s{color:#2dff8a}.code .c{color:#5b6190}
+.use{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.use .card{text-align:center}
+.faq{max-width:800px;margin:0 auto}
+.faq details{border:1px solid rgba(123,92,255,.3);border-radius:12px;margin-bottom:12px;padding:18px 22px;background:rgba(14,10,38,.6);transition:.3s}
+.faq details[open]{border-color:var(--c);box-shadow:0 0 30px rgba(0,240,255,.12)}
+.faq summary{cursor:pointer;font:700 16px Orbitron,'Exo 2',sans-serif;list-style:none;display:flex;justify-content:space-between;gap:20px}
+.faq summary::after{content:"+";color:var(--c);font-size:22px;transition:.3s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{color:var(--mut);margin-top:12px}
+.fgrid{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:70px 5vw 20px;display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:40px;border-top:1px solid rgba(0,240,255,.12)}
+@media(max-width:800px){.fgrid{grid-template-columns:1fr 1fr}}
+.fgrid h5{font:700 13px Orbitron,'Exo 2',sans-serif;color:var(--c);letter-spacing:.2em;margin-bottom:14px}
+.fgrid li{list-style:none;margin:8px 0;font-size:15px}.fgrid a{color:var(--mut);text-decoration:none}.fgrid a:hover{color:var(--c)}
+
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+#prog{position:fixed;top:0;left:0;height:3px;width:0;z-index:100;background:linear-gradient(90deg,var(--c),var(--m));box-shadow:0 0 14px var(--c)}
+#glow{position:fixed;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(0,240,255,.13),transparent 65%);transition:opacity .4s;opacity:0}
+.beam{position:absolute;left:0;right:0;height:140px;z-index:1;pointer-events:none;background:linear-gradient(transparent,rgba(0,240,255,.09),transparent);animation:beam 6s linear infinite}
+.beam::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--c),transparent)}
+@keyframes beam{from{top:-140px}to{top:100%}}
+.ico svg{width:36px;height:36px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 8px var(--m))}
+.card.on .ico svg *{stroke-dasharray:140;stroke-dashoffset:140;animation:dr 1.8s .2s ease forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.card::after{content:"";position:absolute;inset:8px;pointer-events:none;border:1px solid transparent;
+ background:linear-gradient(var(--c),var(--c)) top left/14px 1px,linear-gradient(var(--c),var(--c)) top left/1px 14px,linear-gradient(var(--c),var(--c)) bottom right/14px 1px,linear-gradient(var(--c),var(--c)) bottom right/1px 14px;background-repeat:no-repeat;opacity:.35;transition:.3s}
+.card:hover::after{opacity:1;inset:5px}
+@property --ang{syntax:"<angle>";initial-value:0deg;inherits:false}
+.plan.hot{position:relative;isolation:isolate;border:0;background:#0b0820;box-shadow:0 0 60px rgba(255,43,214,.25)}
+.plan.hot::before{content:"";position:absolute;inset:-2px;border-radius:18px;z-index:-2;background:conic-gradient(from var(--ang),var(--c),var(--m),var(--v),var(--c));animation:ang 4s linear infinite}
+.plan.hot::after{content:"";position:absolute;inset:0;border-radius:16px;background:#0b0820;z-index:-1}
+@keyframes ang{to{--ang:360deg}}
+.btn{will-change:transform}
+.btn.mag{transition:transform .15s ease-out,filter .25s}
+.hud div span{display:inline-block;min-width:1ch}
+.badge{animation:bd 4s ease-in-out infinite}
+@keyframes bd{50%{box-shadow:0 0 24px rgba(0,240,255,.35)}}
+.floor div{box-shadow:0 -40px 80px var(--bg) inset}
+</style>
+</head>
+<body>
+<div id="prog"></div><div id="glow"></div>
+<canvas id="net"></canvas><div class="glow1"></div><div class="glow2"></div>
+
+<nav><div class="brand">NEXUS</div>
+<ul><li><a href="#why">Платформа</a></li><li><a href="#gpu">Железо</a></li><li><a href="#plans">Тарифы</a></li></ul>
+<a class="btn" href="#go" style="padding:10px 22px">Запуск</a></nav>
+
+<header class="hero">
+  <div class="beam"></div>
+  <div class="floor"><div></div></div>
+  <span class="badge"><i></i> СЕТЬ ОНЛАЙН · 14 208 GPU В СТРОЮ</span>
+  <h1><span class="g" data-t="Обучай быстрее" id="t1"><span class="gl">Обучай быстрее</span></span><br><span class="g" data-t="чем думаешь" id="t2"><span class="gl">чем думаешь</span></span></h1>
+  <p class="sub">Облако GPU для нейросетей: H200 и B200 по запросу, запуск за 30 секунд, оплата посекундно. Никаких очередей и контрактов.</p>
+  <div class="cta"><a class="btn" href="#go">Получить 50 часов</a><a class="btn ghost" href="#gpu">Смотреть железо</a></div>
+  <div class="hud">
+    <div><span data-n="14208">0</span><small>GPU онлайн</small></div>
+    <div><span data-n="31">0</span>с<small>до старта</small></div>
+    <div><span data-n="99.98" data-d="2">0</span>%<small>аптайм</small></div>
+  </div>
+</header>
+
+<div class="tick"><div id="tk"></div></div>
+
+<section id="why">
+  <span class="lbl">// ПЛАТФОРМА</span><h2 class="rv">Всё для обучения</h2>
+  <p class="p rv">Один API — от прототипа до кластера на тысячи ускорителей.</p>
+  <div class="cards">
+    <div class="card rv"><div class="ico"><svg viewBox="0 0 40 40"><path d="M23 3 8 23h11l-3 14 16-21H21z"/></svg></div><h3>МГНОВЕННЫЙ СТАРТ</h3><p>Образы с PyTorch, JAX и CUDA уже в кэше. Нажал — считает.</p><div class="bar"><i data-w="94"></i></div></div>
+    <div class="card rv"><div class="ico"><svg viewBox="0 0 40 40"><path d="M20 3 37 20 20 37 3 20z"/><path d="M20 11 29 20 20 29 11 20z"/></svg></div><h3>NVLINK КЛАСТЕРЫ</h3><p>До 4096 GPU в одной фабрике с InfiniBand 800 Гбит/с.</p><div class="bar"><i data-w="88"></i></div></div>
+    <div class="card rv"><div class="ico"><svg viewBox="0 0 40 40"><path d="M20 3 35 11.5v17L20 37 5 28.5v-17z"/><circle cx="20" cy="20" r="5"/></svg></div><h3>СПОТ −70%</h3><p>Прерываемые узлы с авто-чекпоинтом. Платите за то, что реально считали.</p><div class="bar"><i data-w="70"></i></div></div>
+    <div class="card rv"><div class="ico"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16"/><circle cx="20" cy="20" r="7"/><path d="M20 4v6M20 30v6M4 20h6M30 20h6"/></svg></div><h3>ПРИВАТНОСТЬ</h3><p>Изолированные тенанты, шифрование дисков и данных в полёте.</p><div class="bar"><i data-w="100"></i></div></div>
+  </div>
+</section>
+
+<section id="gpu">
+  <span class="lbl">// ЖЕЛЕЗО</span><h2 class="rv">Ускорители</h2>
+  <p class="p rv">Живая загрузка пулов. Обновляется каждую секунду.</p>
+  <div class="cards" id="pools"></div>
+</section>
+
+<section id="plans">
+  <span class="lbl">// ТАРИФЫ</span><h2 class="rv">Плати за секунды</h2><p class="p rv">Без минимального платежа и скрытых комиссий.</p>
+  <div class="price">
+    <div class="plan rv"><h3>LAB</h3><b>$1.9<small style="font-size:16px">/ч</small></b><span style="color:var(--mut)">L40S · 48 ГБ</span><ul><li>Jupyter из коробки</li><li>Хранилище 100 ГБ</li><li>Спот-режим</li></ul><a class="btn ghost" href="#go">Выбрать</a></div>
+    <div class="plan hot rv"><span class="tag">ХИТ</span><h3>PRO</h3><b>$3.4<small style="font-size:16px">/ч</small></b><span style="color:var(--mut)">H200 · 141 ГБ</span><ul><li>NVLink до 8 GPU</li><li>Хранилище 2 ТБ</li><li>Приоритет в очереди</li><li>SLA 99.9%</li></ul><a class="btn" href="#go">Выбрать</a></div>
+    <div class="plan rv"><h3>CLUSTER</h3><b>custom</b><span style="color:var(--mut)">B200 · от 64 GPU</span><ul><li>InfiniBand 800G</li><li>Выделенный инженер</li><li>Private cloud</li></ul><a class="btn ghost" href="#go">Связаться</a></div>
+  </div>
+</section>
+
+<section id="how">
+  <span class="lbl">// КАК ЭТО РАБОТАЕТ</span><h2 class="rv">Три шага до запуска</h2><p class="p rv">Никаких заявок и звонков менеджеру. Всё через консоль или API.</p>
+  <div class="steps">
+    <div class="rv">
+      <div class="st"><b>01</b><div><h3>Выберите GPU</h3><p>H200, B200 или L40S. Спот или по запросу.</p></div></div>
+      <div class="st"><b>02</b><div><h3>Запустите образ</h3><p>Свой Docker или готовый шаблон PyTorch/JAX.</p></div></div>
+      <div class="st"><b>03</b><div><h3>Обучайте</h3><p>Мониторинг, чекпоинты и логи — в личном кабинете.</p></div></div>
+    </div>
+    <div class="code rv"><div class="h"><i></i><i></i><i></i></div><pre><span class="c"># запуск кластера на 8 GPU</span>
+<span class="k">$</span> nexus run \
+    --gpu <span class="s">h200</span> --count <span class="s">8</span> \
+    --image <span class="s">pytorch:2.6</span> \
+    --spot
+
+<span class="s">[ok] узел выделен за 31 сек</span>
+<span class="s">[ok] NVLink: 900 ГБ/с</span>
+<span class="c"># обучение пошло...</span>
+epoch 1/90  loss 2.314  <span class="s">████░░░░</span> 41%</pre></div>
+  </div>
+</section>
+
+<div class="logos"><small>НАМ ДОВЕРЯЮТ</small><div><span>QUANTA</span><span>NEUROX</span><span>DEEPLAB</span><span>VORTEX AI</span><span>SYNTHIA</span></div></div>
+
+<section id="use">
+  <span class="lbl">// СЦЕНАРИИ</span><h2 class="rv">Для любых задач</h2><p class="p rv">От дообучения LLM до рендера и инференса в продакшене.</p>
+  <div class="use">
+    <div class="card rv"><div class="ico">LLM</div><h3>ОБУЧЕНИЕ МОДЕЛЕЙ</h3><p>Pre-train и fine-tune на кластерах до 4096 GPU.</p></div>
+    <div class="card rv"><div class="ico">API</div><h3>ИНФЕРЕНС</h3><p>Автомасштабирование от 0 до 1000 реплик за секунды.</p></div>
+    <div class="card rv"><div class="ico">3D</div><h3>РЕНДЕР</h3><p>Blender, Unreal и Houdini на мощных фермах.</p></div>
+    <div class="card rv"><div class="ico">R&D</div><h3>ИССЛЕДОВАНИЯ</h3><p>Научные расчёты, симуляции, биоинформатика.</p></div>
+  </div>
+</section>
+
+<section id="voices">
+  <span class="lbl">// ОТЗЫВЫ</span><h2 class="rv">Говорят инженеры</h2><br>
+  <div class="cards">
+    <div class="card rv"><p>«Обучение модели сократилось с 9 дней до 2. Запуск за полминуты — это магия.»</p><br><h3 style="font-size:15px">АЛЕКСЕЙ М. · ML LEAD, QUANTA</h3></div>
+    <div class="card rv"><p>«Спот с авто-чекпоинтом сэкономил нам 68% бюджета. Ни одного потерянного прогона.»</p><br><h3 style="font-size:15px">ДАРЬЯ К. · CTO, NEUROX</h3></div>
+    <div class="card rv"><p>«Наконец-то поддержка, которая отвечает за 3 минуты и реально разбирается в CUDA.»</p><br><h3 style="font-size:15px">ИЛЬЯ С. · RESEARCHER, DEEPLAB</h3></div>
+  </div>
+</section>
+
+<section id="faq">
+  <span class="lbl">// FAQ</span><h2 class="rv">Частые вопросы</h2><br>
+  <div class="faq rv">
+    <details open><summary>Сколько стоит запуск?</summary><p>От $1.9 в час за L40S. Платите посекундно, минимального платежа нет.</p></details>
+    <details><summary>Что если спот-узел отключат?</summary><p>Мы автоматически сохраним чекпоинт и перезапустим задачу на свободном узле.</p></details>
+    <details><summary>Мои данные в безопасности?</summary><p>Да: изолированные тенанты, шифрование дисков AES-256 и сертификация SOC 2.</p></details>
+    <details><summary>Можно ли оплатить с юрлица?</summary><p>Да, работаем по безналу и выставляем закрывающие документы.</p></details>
+  </div>
+</section>
+
+<div class="cta2" id="go"><span class="lbl">// ГОТОВ?</span><h2 class="rv"><span class="gl">Подключись к сети</span></h2><a class="btn" href="#">Старт · 50 часов бесплатно</a></div>
+<div class="fgrid">
+  <div><div class="brand">NEXUS</div><p style="color:var(--mut);font-size:14px;margin-top:10px;max-width:260px">Облако GPU для обучения и запуска нейросетей. Дата-центры в 6 странах.</p></div>
+  <div><h5>ПРОДУКТ</h5><ul><li><a href="#why">Платформа</a></li><li><a href="#gpu">Железо</a></li><li><a href="#plans">Тарифы</a></li><li><a href="#">Статус</a></li></ul></div>
+  <div><h5>РЕСУРСЫ</h5><ul><li><a href="#">Документация</a></li><li><a href="#">API</a></li><li><a href="#">Блог</a></li><li><a href="#">Сообщество</a></li></ul></div>
+  <div><h5>КОМПАНИЯ</h5><ul><li><a href="#">О нас</a></li><li><a href="#">Карьера</a></li><li><a href="#">Контакты</a></li><li><a href="#">Безопасность</a></li></ul></div>
+</div>
+<footer>NEXUS CLOUD © 2026 · ВСЕ СИСТЕМЫ В НОРМЕ</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+/* particle network */
+(()=>{const c=$('#net'),x=c.getContext('2d');let w,h,P=[],m={x:-999,y:-999};
+const rs=()=>{w=c.width=innerWidth;h=c.height=innerHeight;P=Array.from({length:Math.min(110,w*h/14000|0)},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5}))};
+rs();addEventListener('resize',rs);addEventListener('mousemove',e=>{m.x=e.clientX;m.y=e.clientY});
+(function f(){x.clearRect(0,0,w,h);
+ P.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;
+  const dx=p.x-m.x,dy=p.y-m.y,d=Math.hypot(dx,dy);if(d<140){p.x+=dx/d*1.6;p.y+=dy/d*1.6}
+  x.fillStyle='#00f0ff';x.globalAlpha=.8;x.fillRect(p.x-1,p.y-1,2.4,2.4);
+  for(let j=i+1;j<P.length;j++){const q=P[j],l=Math.hypot(p.x-q.x,p.y-q.y);if(l<130){x.globalAlpha=(1-l/130)*.35;x.strokeStyle=i%3?'#7b5cff':'#ff2bd6';x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.stroke()}}
+  const dm=Math.hypot(p.x-m.x,p.y-m.y);if(dm<170){x.globalAlpha=(1-dm/170)*.6;x.strokeStyle='#00f0ff';x.beginPath();x.moveTo(p.x,p.y);x.lineTo(m.x,m.y);x.stroke()}});
+ requestAnimationFrame(f)})()})();
+/* ticker */
+$('#tk').textContent=('H200 ◆ B200 ◆ NVLINK ◆ INFINIBAND ◆ SPOT −70% ◆ START 31s ◆ PYTORCH ◆ JAX ◆ CUDA 13 ◆ '.repeat(8));
+/* pools */
+const pools=[['H200',82],['B200',64],['L40S',91],['A100',47]];
+$('#pools').innerHTML=pools.map(([n,v])=>`<div class="card rv"><div class="ico">${n}</div><h3 data-p="${n}">${v}% занято</h3><p>Свободно: <span data-f="${n}">${Math.round(900*(100-v)/100)}</span> узлов</p><div class="bar"><i data-w="${v}" data-pb="${n}"></i></div></div>`).join('');
+setInterval(()=>{pools.forEach(p=>{p[1]=Math.max(20,Math.min(99,p[1]+Math.round((Math.random()-.5)*5)));
+ $(`[data-p="${p[0]}"]`).textContent=p[1]+'% занято';$(`[data-f="${p[0]}"]`).textContent=Math.round(900*(100-p[1])/100);$(`[data-pb="${p[0]}"]`).style.width=p[1]+'%'})},1200);
+/* card spotlight + tilt */
+document.addEventListener('mousemove',e=>{const c=e.target.closest?.('.card');if(!c)return;const r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+ c.style.setProperty('--mx',px*100+'%');c.style.setProperty('--my',py*100+'%');c.style.transform=`perspective(700px) rotateY(${(px-.5)*10}deg) rotateX(${(.5-py)*10}deg) translateZ(6px)`});
+document.addEventListener('mouseout',e=>{const c=e.target.closest?.('.card');if(c)c.style.transform=''});
+/* reveal, counters, bars */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const t=e.target;t.classList.add('on');
+ t.querySelectorAll('.bar i').forEach(b=>b.style.width=b.dataset.w+'%');io.unobserve(t)}),{threshold:.15});
+const mo=()=>document.querySelectorAll('.rv').forEach(e=>io.observe(e));mo();
+document.querySelectorAll('[data-n]').forEach(b=>{const n=+b.dataset.n,d=+b.dataset.d||0,t0=performance.now()+300;
+ (function f(t){const p=Math.max(0,Math.min(1,(t-t0)/2000)),v=n*(1-Math.pow(1-p,4));b.textContent=d?v.toFixed(d):Math.round(v).toLocaleString('ru');if(p<1)requestAnimationFrame(f)})(t0)});
+
+/* progress bar + cursor glow */
+const prog=$('#prog'),glow=$('#glow');
+addEventListener('scroll',()=>{prog.style.width=(scrollY/(document.documentElement.scrollHeight-innerHeight)*100)+'%'},{passive:true});
+addEventListener('mousemove',e=>{glow.style.opacity=1;glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'});
+/* magnetic buttons */
+document.querySelectorAll('.btn').forEach(b=>{b.classList.add('mag');
+ b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.18}px,${(e.clientY-r.top-r.height/2)*.28-2}px)`});
+ b.addEventListener('mouseleave',()=>b.style.transform='')});
+/* text scramble on headings */
+const G='01<>/\#$%&*+=_';
+function scramble(el){const txt=el.dataset.t||(el.dataset.t=el.textContent);let f=0;const n=txt.length;
+ (function s(){let o='';for(let i=0;i<n;i++)o+=i<f/2?txt[i]:(txt[i]===' '?' ':G[Math.random()*G.length|0]);el.textContent=o;if(f<n*2){f++;requestAnimationFrame(s)}else el.textContent=txt})()}
+const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){scramble(e.target);so.unobserve(e.target)}}),{threshold:.6});
+document.querySelectorAll('h2').forEach(h=>{if(!h.children.length)so.observe(h)});
+</script>
+</body>
+</html>
